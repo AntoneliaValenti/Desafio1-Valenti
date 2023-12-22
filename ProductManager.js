@@ -56,3 +56,7 @@ product.addProduct("Todo lo que somos juntos", "Libro de Allice kelen", 17500, "
 
 
 console.log(product.getProduct());
+
+
+
+//Primer desafio
