@@ -44,7 +44,6 @@ class ProductManager {
     }
 }
 
-
 const product = new ProductManager();
 
 product.addProduct("Donde todo brilla", "Libro de Allice kelen", 1000, "../Assets/donde.jpg", 1001, 10);
