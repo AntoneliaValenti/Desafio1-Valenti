@@ -1,61 +1,128 @@
+const fs = require('fs');
+
+async function inventario(path, products) {
+    try {
+        await fs.promises.writeFile(path, JSON.stringify(products, null, 2), 'utf-8');
+        console.log("Producto agregado correctamente");
+    } catch (err) {
+        console.error(`Hubo un error al escribir en el archivo: ${err}`);
+    }
+}
+
 class ProductManager {
     constructor() {
-        this.product = []
-        this.id = 0
+        this.products = [];
+        this.id = 0;
+        this.path = './pred.json';
     }
 
-    getProduct() {
-        return this.product
+    async getProduct() {
+        try {
+            const data = await fs.promises.readFile(this.path, 'utf-8');
+            this.products = JSON.parse(data);
+            console.log(this.products);
+        } catch (err) {
+            console.error(`Hubo un error: ${err}`);
+        }
     }
 
-    addProduct(title, description, price, thumbnail, code, stock) {
-        if (!title || !description || !price || !thumbnail || !code || !stock){
+    async addProduct(title, description, price, thumbnail, code, stock) {
+        if (!title || !description || !price || !thumbnail || !code || !stock) {
             console.log("Todos los datos son obligatorios");
-    }
-
-    if (!this.product.some((p) => p.code === code)) {
-        this.id++;
-        let newProduct = { id: this.id, title, description, price, thumbnail, code, stock};
-        
-        this.product.push(newProduct);
-        console.log(`El producto ${title} fue agregado correctamente`);
         } else {
-            console.log(`Ya existe un producto con el codigo ${code}`);
+            let condition = true;
+            try {
+                const data = await fs.promises.readFile(this.path, 'utf-8');
+                this.products = JSON.parse(data);
+
+                do {
+                    if (!this.products.some(prod => prod.id === this.id)) {
+                        condition = false;
+                        if (!this.products.some(prod => prod.code === code)) {
+                            let newProduct = { id: this.id++, title, description, price, thumbnail, code, stock };
+                            this.products.push(newProduct);
+                            await inventario(this.path, this.products);
+                        } else {
+                            console.log(`Ya existe un producto con el código ${code}`);
+                        }
+                    } else {
+                        this.id++;
+                    }
+                } while (condition);
+            } catch (err) {
+                console.log(`Existe un error: ${err}`);
+            }
         }
     }
 
-    getProductCode(code) {
-        let product = this.product.find((p) => p.code === code);
-    
-        if (!product) {
-            console.log('No existe ningun producto con el codigo ${code}');
-        } else {
-            return product
-        }
-    }
-    getProductById(id) {
-        const product = this.product.find((p) => p.id === id);
-
-        if (!product) {
-            console.log(`No existe ningún producto con el ID ${id}`);
-        } else {
-            return product;
+    async getProductById(id) {
+        try {
+            const data = await fs.promises.readFile(this.path, 'utf-8');
+            this.products = JSON.parse(data);
+            const element = this.products.find(e => e.id === id);
+            if (element) {
+                console.log(element);
+            } else {
+                console.log(`No existe ningún producto con el ID ${id}`);
+            }
+        } catch (err) {
+            console.log(`Hubo un error: ${err}`);
         }
     }
 }
 
-const product = new ProductManager();
+const productManager = new ProductManager();
 
-product.addProduct("Donde todo brilla", "Libro de Allice kelen", 1000, "../Assets/donde.jpg", 1001, 10);
-product.addProduct("El mapa de los anhelos", "Libro de Allice kelen", 1100, "../Assets/mapaan2.jpg", 1002, 15);
-product.addProduct("El dia que dejo de nevar en Alaska", "Libro de Allice kelen", 10000, "../Assets/eldia.jpg", 1003, 12);
-product.addProduct("Nosotros en la luna", "Libro de Allice kelen", 12000, "../Assets/nosotros.jpg", 1004, 12);
-product.addProduct("La teoria de los archipielagos", "Libro de Allice kelen", 12690, "../Assets/archipielagos.jpg", 1005, 20);
-product.addProduct("Todo lo que nunca fuimos", "Libro de Allice kelen", 17500, "../Assets/todo.jpg", 1006, 9);
-product.addProduct("Todo lo que somos juntos", "Libro de Allice kelen", 17500, "../Assets/somos.jpg", 1007, 9);
+let products = [
+    {
+        id: productManager.id++,
+        title: "Donde todo brilla",
+        description: "Libro de Allice kelen",
+        price: 1000,
+        thumbnail: "../Assets/donde.jpg",
+        code: 1001,
+        stock: 25,
+    },
+    {
+        id: productManager.id++,
+        title: "El mapa de los anhelos",
+        description: "Libro de Allice kelen",
+        price: 1100,
+        thumbnail: "../Assets/mapa.jpg",
+        code: 1002,
+        stock: 20,
+    },
+    {
+        id: productManager.id++,
+        title: "El dia que dejo de nevar en Alaska",
+        description: "Libro de Allice kelen",
+        price: 1200,
+        thumbnail: "../Assets/dia.jpg",
+        code: 1003,
+        stock: 15,
+    }
+];
 
+// Crear
+fs.writeFileSync('./pred.json', JSON.stringify(products, null, 2), { encoding: 'utf-8' });
 
-console.log(product.getProduct());
+// Leer
+let readRes = fs.readFileSync('./pred.json', { encoding: 'utf-8' });
 
+// Agregar
+let arrayPr = JSON.parse(readRes);
+
+arrayPr.push({
+    id: productManager.id++,
+    title: "Nosotros en la luna",
+    description: "Libro de Allice kelen",
+    price: 1500,
+    thumbnail: "../Assets/luna.jpg",
+    code: 1004,
+    stock: 5,
+});
+
+fs.writeFileSync('./pred.json', JSON.stringify(arrayPr, null, 2), { encoding: 'utf-8' });
+console.log(arrayPr);
 
 
