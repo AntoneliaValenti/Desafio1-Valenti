@@ -67,22 +67,5 @@ class ProductManager {
 }
 
 
-const productManager = new ProductManager();
 
-
-// fs.writeFileSync('./prod.json', JSON.stringify(products, null, 2), { encoding: 'utf-8' });
-// let readRes = fs.readFileSync('./prod.json', { encoding: 'utf-8' });
-// let arrayPr = JSON.parse(readRes);
-// arrayPr.push({ id: productManager.id++, title: "Nosotros en la luna", description: "Libro de Allice kelen", price: 1500, thumbnail: "../Assets/luna.jpg", code: 1004, stock: 5 });
-// fs.writeFileSync('./prod.json', JSON.stringify(arrayPr, null, 2), { encoding: 'utf-8' });
-
-
-productManager.allProducts().then(res => {
-    console.log("RES: ", res);
-});
-
-
-// productManager.addProduct("Nuevo Producto", "Descripción del nuevo producto", 200, "imagen.jpg", 1005, 10);
-// productManager.getProductById(1);
-
-module.exports = productManager;
+module.exports = ProductManager;
