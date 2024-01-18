@@ -1,8 +1,8 @@
 import { Router } from "express"
-import { ProductManager } from "../ProductManager"
+import { ProductManager } from "../ProductManager.js"
 
 
-export const  prodRouter = Router()
+export const prodRouter = Router()
 
 prodRouter.get('/', async (req, res) => {
     const { limit } = req.query
