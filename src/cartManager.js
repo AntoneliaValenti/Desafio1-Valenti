@@ -1,6 +1,7 @@
 import { promises as fs } from "fs"
 import crypto from 'crypto'
 
+
 export class cartManager{
 
     constructor(){
@@ -52,7 +53,7 @@ export class cartManager{
 
             carts[index].products = CartProducts
 
-            await fs.writeFile(this.path. JSON.stringify(cart))
+            await fs.writeFle(this.path. JSON.stringify(cart))
                 console.log ("Producto agregado al carrito")
             } else {
                 console.log("no se encontro el carrito")
