@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { cartManager } from "../app"
+import { cartManager } from "../cartManager"
 
 export const cartsRouter = Router()
 
@@ -25,7 +25,7 @@ const {cid} = req.params
 cartsRouter.post('/:cid/products/:pid', async (req, res) => {
     const {cid, pid} = req.params
     try{
-        const response = await cartManager.addProductsToCart(cid, pid)
+        await cartManager.addProductToCart(cid, pid)
         res.send("Producto agregado")
     } catch {
         res.send("Error al guardar prodcuto al carrito")

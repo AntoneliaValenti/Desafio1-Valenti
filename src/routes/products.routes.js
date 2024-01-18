@@ -1,23 +1,19 @@
 import { Router } from "express"
-import { ProductManager } from '../../src/ProductManager.js'
+import { ProductManager } from "../ProductManager"
 
 
-const productManagerInstance = new ProductManager()
+export const  prodRouter = Router()
 
-
-const routerProd = Router()
-
-routerProd.get('/', async (req, res) => {
+prodRouter.get('/', async (req, res) => {
     const { limit } = req.query
-    const prods = await productManagerInstance.allProducts()
-    const products = prods.slice(0, limit ? parseInt(limit) : undefined)
+    const prods = await ProductManager.allProducts()
+    const products = prods.slice(0, limit)
     res.status(200).send(products)
-    
 })
 
-routerProd.get('/:id', async (req, res) =>{
+prodRouter.get('/:id', async (req, res) =>{
     const {id} = req.params
-    const prod = await productManagerInstance.getProductById(id)
+    const prod = await ProductManager.getProductById(id)
 
     if(prod) {
         res.status(200).send(prod)
@@ -26,8 +22,8 @@ routerProd.get('/:id', async (req, res) =>{
     }
 }) 
 
-routerProd.post('/', async (req, res) => {
-    const conf = await productManagerInstance.addProduct(req.body)
+prodRouter.post('/', async (req, res) => {
+    const conf = await ProductManager.addProduct(req.body)
 
     if(conf) {
         res.status(201).send("Producto creado")
@@ -36,9 +32,9 @@ routerProd.post('/', async (req, res) => {
     }
 })
 
-routerProd.put('/:id', async(req, res ) => {
+prodRouter.put('/:id', async(req, res ) => {
     const {id} = req.params
-    const conf = await productManagerInstance.updateProduct(id, req.body)
+    const conf = await ProductManager.updateProduct(id, req.body)
 
     if(conf) {
         res.status(201).send("Producto actualizado")
@@ -47,9 +43,9 @@ routerProd.put('/:id', async(req, res ) => {
     }
 })
 
-routerProd.delete('/:id', async(req, res) => {
+prodRouter.delete('/:id', async(req, res) => {
     const {id} = req.params
-    const conf = await productManagerInstance.delete(id)
+    const conf = await ProductManager.delete(id)
 
     if(conf) {
         res.status(201).send("Producto eliminado")
@@ -58,4 +54,3 @@ routerProd.delete('/:id', async(req, res) => {
     }
 })
 
-export default routerProd
