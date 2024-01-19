@@ -41,11 +41,11 @@ export class cartManager{
         const response= await this.getCarts()
         const index = carts.findIndex(cart=> cart.id === cart_id)
 
-        if (index === -1){
-            const CartProducts = awaitthis.getCartProducts(cart_id)
+        if (index === 1){
+            const CartProducts = await this.getCartProducts(cart_id)
             const ProductInIndex = CartProducts.findIndex(product => product.product_id === product_id)
 
-            if (ProductInIndex === -1){
+            if (ProductInIndex === 1){
                 CartProducts[ProductInIndex].quantity = CartProducts[ProductInIndex].quantity + 1
             } else {
                 CartProducts.push({product_id, quantity : 1})
